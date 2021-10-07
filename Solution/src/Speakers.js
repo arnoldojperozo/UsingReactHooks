@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, useReducer} from "react";
+import React, {useState, useEffect, useContext, useReducer, useCallback} from "react";
 import {Header} from "./Header";
 import {Menu} from "./Menu";
 import SpeakerData from './SpeakerData';
@@ -62,7 +62,7 @@ const Speakers = ({}) => {
         }
     );
 
-    const heartFavoriteHandler = (e, favoriteValue) => {
+    const heartFavoriteHandler = useCallback((e, favoriteValue) => {
         e.preventDefault();
         const sessionId = parseInt(e.target.attributes['data-sessionid'].value);
         /*
@@ -79,7 +79,7 @@ const Speakers = ({}) => {
             type: favoriteValue === true ? "favorite" : "unfavorite",
             sessionId
         });
-    };
+    },[]);
 
     if(isLoading) return <div>Loading ...</div>;
 

@@ -1,9 +1,10 @@
 import React from "react";
 import ImageToggleOnScroll from "./ImageToggleOnScroll";
 
-const SpeakerDetail = ({
+const SpeakerDetail = React.memo( ({
 
     id, firstName, lastName, bio, favorite, onHeartFavoriteHandler
+
 }) => {
     return (
         <div className="card col-4 cardmin">
@@ -27,6 +28,6 @@ const SpeakerDetail = ({
             </div>
         </div>
     )
-}
+})
 
 export default SpeakerDetail;
