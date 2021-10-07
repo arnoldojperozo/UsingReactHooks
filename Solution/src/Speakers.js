@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {useState, useEffect, useContext, useReducer} from "react";
 import {Header} from "./Header";
 import {Menu} from "./Menu";
 import SpeakerData from './SpeakerData';
 import SpeakerDetail from "./SpeakerDetail";
 import { ConfigContext } from "./App";
+import speakersReducer from "./speakersReducer";
 
 const Speakers = ({}) => {
 
     const [speakingSaturday, setSpeakingSaturday] = useState(true);
     const [speakingSunday, setSpeakingSunday] = useState(true);
 
-    const [speakerList, setSpeakerList] = useState([]);
+    //const [speakerList, setSpeakerList] = useState([]);
+    const [speakerList, dispatch] = useReducer(speakersReducer, []);
     const [isLoading, setIsLoading] = useState(true);
 
     const context = useContext(ConfigContext);
@@ -23,8 +25,15 @@ const Speakers = ({}) => {
             },1000)
         }).then(() =>{
             setIsLoading(false);
+            const speakerListServerFilter = SpeakerData.filter(({ sat, sun }) => {
+                return (speakingSaturday && sat) || (speakingSunday && sun);
+            });
+                //setSpeakerList(speakerListServerFilter);
+                dispatch({
+                    type: "setSpeakerList",
+                    data: speakerListServerFilter
+            })
         });
-        setSpeakerList(SpeakerData);
         return () => {
             console.log('cleanup');
         };
@@ -56,6 +65,7 @@ const Speakers = ({}) => {
     const heartFavoriteHandler = (e, favoriteValue) => {
         e.preventDefault();
         const sessionId = parseInt(e.target.attributes['data-sessionid'].value);
+        /*
         setSpeakerList(
             speakerListFiltered.map((item) => {
                 if(item.id === sessionId){
@@ -64,6 +74,11 @@ const Speakers = ({}) => {
                 return  item;
             }),
         );
+         */
+        dispatch({
+            type: favoriteValue === true ? "favorite" : "unfavorite",
+            sessionId
+        });
     };
 
     if(isLoading) return <div>Loading ...</div>;
