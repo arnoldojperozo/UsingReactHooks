@@ -1,5 +1,6 @@
 import React from "react";
 import Home from "./Home.js";
+import Speakers from "./Speakers";
 
 const App = ({ pageName}) => {
 
